@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:simple_login_app/screens/login_screen.dart';
+import 'package:simple_login_app/services/services.dart';
 
 class SigupScreen extends StatelessWidget {
   SigupScreen({super.key});
 
   final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,51 +40,36 @@ class SigupScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
+                    controller: _usernameController,
                     decoration: InputDecoration(
                       labelText: "Username",
                       border: OutlineInputBorder(),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your username';
-                      }
-                      return null;
-                    },
+                    validator: SignUpFormValidators.validateUsername,
                   ),
                   SizedBox(height: 20),
                   TextFormField(
+                    controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: "Password",
                       border: OutlineInputBorder(),
                     ),
                     obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters long';
-                      }
-                      return null;
-                    },
+                    validator: SignUpFormValidators.validatePassword,
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _confirmPasswordController,
                     decoration: InputDecoration(
                       labelText: "Confirm Password",
                       border: OutlineInputBorder(),
                     ),
                     obscureText: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
-                      }
-                      if (value != _formKey.currentState?.validate()) {
-                        return 'Passwords do not match';
-                      }
-                      return null;
+                      return SignUpFormValidators.validateConfirmPassword(
+                          value, _passwordController.text);
                     },
                   ),
                   SizedBox(height: 20),
@@ -124,9 +113,11 @@ class SigupScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Login button pressed")),
-                      );
+                      SignUpFormValidators.handleSignUp(
+                          context,
+                          _usernameController.text,
+                          _passwordController.text,
+                          _confirmPasswordController.text);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
@@ -135,7 +126,8 @@ class SigupScreen extends StatelessWidget {
                       ),
                       textStyle: TextStyle(fontSize: 16),
                     ),
-                    child: Text("Login", style: TextStyle(color: Colors.white)),
+                    child:
+                        Text("Sign Up", style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),

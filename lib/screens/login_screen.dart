@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:simple_login_app/screens/forgot_screen.dart';
 import 'package:simple_login_app/screens/sigup_screen.dart';
+import 'package:simple_login_app/services/services.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +23,7 @@ class LoginScreen extends StatelessWidget {
       ),
       body: Center(
         child: Form(
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: SingleChildScrollView(
@@ -34,6 +40,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
+                    controller: _usernameController,
                     decoration: InputDecoration(
                       labelText: "Username",
                       border: OutlineInputBorder(),
@@ -41,6 +48,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
+                    controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: "Password",
                       border: OutlineInputBorder(),
@@ -77,8 +85,10 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Login button pressed")),
+                      LoginScreenValidators.handleLogin(
+                        context,
+                        _usernameController.text,
+                        _passwordController.text,
                       );
                     },
                     style: ElevatedButton.styleFrom(

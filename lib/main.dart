@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:simple_login_app/screens/login_screen.dart';
 
-void main ()
-{
+
+void main() {
   runApp(LoginApp());
 }
 
